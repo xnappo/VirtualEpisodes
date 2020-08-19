@@ -1,5 +1,5 @@
 # VirtualEpisodes
-Set of utilities to provide dummy episodes for streaming provider content
+Set of utilities to provide dummy episodes for streaming provider content.
 
 Problem:
 
@@ -8,7 +8,7 @@ Want to be able to track streaming provider TV episodes within Kodi, but just wa
 Solution:
 
 - Python script autoVirtual monitors Sonarr calendar for new Netflix and Amazon episode availability and creates placeholder episode files
-- Python script addVirtual uses Sonarr data to creat Netflix and Amazon placeholder episode files
+- Python script addVirtual uses Sonarr data to create Netflix and Amazon placeholder episode files
 - Emby scrapes dummy files and adds to database as with any 'real' file
 - Kodi service.py looks for playing file with 'Netflix' or 'Amazon' in the name and lauches native player
 
