@@ -1,0 +1,4 @@
+basePath: "../TV Shows" # Path to where your TV Shows are stored, you can use a temp dir for testing
+host: "localhost:8989" # URL : PORT to your Sonarr
+apiKey: "" # Get this from Sonarr Settings -> General
+dummyFile: "dummy.mp4" # Name and path of the stub video file for Netflix
