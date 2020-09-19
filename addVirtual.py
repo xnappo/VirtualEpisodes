@@ -7,7 +7,7 @@ from os import path
 from shutil import copyfile
 
 with open("config.yaml") as config:
-    configData = yaml.load(config)
+    configData = yaml.load(config, Loader=yaml.FullLoader)
 
 url = "http://" + configData['host']+ "/api/series/?apikey=" + configData['apiKey']	
 try: sys.argv[1]

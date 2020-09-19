@@ -15,7 +15,7 @@ endDate = date.today() + timedelta(daysAhead)
 # End of debug section
 
 with open("config.yaml") as config:
-    configData = yaml.load(config)
+    configData = yaml.load(config, Loader=yaml.FullLoader)
 
 url = "http://" + configData['host'] + "/api/calendar/?apikey=" + configData['apiKey'] + "&unmonitored=true&start=" + startDate.strftime("%Y-%m-%d") + "&end=" + endDate.strftime("%Y-%m-%d")
 
@@ -27,8 +27,8 @@ for item in jsonResponse:
         print ("Adding: " + item['series']['title'] + " " + "S" + showSeason + "E" + showEpisode + " from " + item['series']['network'])
         # Make directories/files as needed
         if not path.exists(configData['basePath'] + "/" + item['series']['title']):
-            os.mkdir(basePath + "/" + item['series']['title'])
+            os.mkdir(configData['basePath'] + "/" + item['series']['title'])
         if not path.exists(configData['basePath'] + "/" + item['series']['title'] + "/Season " + showSeason):
-            os.mkdir(basePath + "/" + item['series']['title'] + "/Season " + showSeason)
+            os.mkdir(configData['basePath'] + "/" + item['series']['title'] + "/Season " + showSeason)
         if not path.exists(configData['basePath'] + "/" + item['series']['title'] + "/Season " + showSeason + "/" + item['series']['network'] + "_S" + showSeason + "E" + showEpisode + ".mp4"):
             copyfile(configData['dummyFile'], configData['basePath'] + "/" + item['series']['title'] + "/Season " + showSeason + "/" + item['series']['network'] + "_S" + showSeason + "E" + showEpisode + ".mp4")
