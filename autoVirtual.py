@@ -21,7 +21,7 @@ url = "http://" + configData['host'] + "/api/calendar/?apikey=" + configData['ap
 
 jsonResponse = requests.get(url).json()
 for item in jsonResponse:
-    if "Netflix" in item['series']['network'] or "Amazon" in item['series']['network']:
+    if "Netflix" in item['series']['network'] or "Amazon" in item['series']['network'] or "HBO" in item['series']['network']:
         showSeason = "{:02d}".format(item['seasonNumber'])
         showEpisode = "{:02d}".format(item['episodeNumber'])
         print ("Adding: " + item['series']['title'] + " " + "S" + showSeason + "E" + showEpisode + " from " + item['series']['network'])

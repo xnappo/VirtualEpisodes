@@ -20,7 +20,7 @@ found = False
 for item in jsonResponse:
     if sys.argv[1].lower() in item['title'].lower():
         found = True
-        if "Netflix" in item['network'] or "Amazon" in item['network']:
+        if "Netflix" in item['network'] or "Amazon" in item['network'] or "HBO" in item['network']:
             if not path.exists(configData['basePath'] + "/" + item['title']):
                 os.mkdir(configData['basePath'] + "/" + item['title'])            
             for season in range (1, item['seasonCount']+1):
@@ -35,6 +35,6 @@ for item in jsonResponse:
 if found == False:
     print ('Series: ' + sys.argv[1] + ' not found!  Please use addVirtual.py with one of the following series:\n')
     for item in jsonResponse:
-        if "Netflix" in item['network'] or "Amazon" in item['network']:
-            print (item['title'])
+        if "Netflix" in item['network'] or "Amazon" in item['network'] or "HBO" in item['network']:
+            print (item['title'] + " [" + item['network'] + "]")
 
