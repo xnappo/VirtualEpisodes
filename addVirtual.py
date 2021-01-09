@@ -20,7 +20,12 @@ found = False
 for item in jsonResponse:
     if sys.argv[1].lower() in item['title'].lower():
         found = True
-        if "Netflix" in item['network'] or "Amazon" in item['network'] or "HBO" in item['network']:
+        if item['network'] in configData['networkMaps']:
+            network = configData['networkMaps'][item['network']]
+        else:
+            network = item['network']
+
+        if network in configData['networks']:
             if not path.exists(configData['basePath'] + "/" + item['title']):
                 os.mkdir(configData['basePath'] + "/" + item['title'])            
             for season in range (1, item['seasonCount']+1):
@@ -29,12 +34,17 @@ for item in jsonResponse:
                     os.mkdir(configData['basePath'] + "/" + item['title'] + "/Season " + showSeason)                
                 for episode in range (1, item['seasons'][season-1]['statistics']['totalEpisodeCount']+1):
                     showEpisode = "{:02d}".format(episode)
-                    print ("Adding: " + item['title'] + " " + "S" + showSeason + "E" + showEpisode + " from " + item['network'])
-                    if not path.exists(configData['basePath'] + "/" + item['title'] + "/Season " + showSeason + "/" + item['network'] + "_S" + showSeason + "E" + showEpisode + ".mp4"):
-                        copyfile(configData['dummyFile'], configData['basePath'] + "/" + item['title'] + "/Season " + showSeason + "/" + item['network'] + "_S" + showSeason + "E" + showEpisode + ".mp4")
+                    print ("Adding: " + item['title'] + " " + "S" + showSeason + "E" + showEpisode + " from " + network)
+                    if not path.exists(configData['basePath'] + "/" + item['title'] + "/Season " + showSeason + "/" + network + "_S" + showSeason + "E" + showEpisode + ".mp4"):
+                        copyfile(configData['dummyFile'], configData['basePath'] + "/" + item['title'] + "/Season " + showSeason + "/" + network + "_S" + showSeason + "E" + showEpisode + ".mp4")
 if found == False:
     print ('Series: ' + sys.argv[1] + ' not found!  Please use addVirtual.py with one of the following series:\n')
     for item in jsonResponse:
-        if "Netflix" in item['network'] or "Amazon" in item['network'] or "HBO" in item['network']:
-            print (item['title'] + " [" + item['network'] + "]")
+        if item['network'] in configData['networkMaps']:
+            network = configData['networkMaps'][item['network']]
+        else:
+            network = item['network']
+
+        if network in configData['networks']:
+            print (item['title'] + " [" + network + "]")
 

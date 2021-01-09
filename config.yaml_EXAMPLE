@@ -2,3 +2,11 @@ basePath: "../TV Shows" # Path to where your TV Shows are stored, you can use a 
 host: "localhost:8989" # URL : PORT to your Sonarr
 apiKey: "" # Get this from Sonarr Settings -> General
 dummyFile: "dummy.mp4" # Name and path of the stub video file for Netflix
+networks: # List of networks available for streaming
+  - Netflix
+  - Amazon
+  - HBO
+  - Discovery
+networkMaps: # Map of original broadcaster to where available to stream
+  BBC One: HBO
+  HBO Max: HBO
