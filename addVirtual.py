@@ -3,6 +3,7 @@ import json
 import sys
 import yaml
 import os.path
+from utils import getNetwork
 from os import path
 from shutil import copyfile
 
@@ -22,11 +23,7 @@ found = False
 for item in jsonResponse:
     if sys.argv[1].lower() in item['title'].lower():
         found = True
-        if item['network'] in configData['networkMaps']:
-            network = configData['networkMaps'][item['network']]
-        else:
-            network = item['network']
-
+        network = getNetwork(item, configData)
         if network in configData['networks']:
             if not path.exists(configData['basePath'] + "/" + item['title']):
                 os.mkdir(configData['basePath'] + "/" + item['title'])
@@ -46,10 +43,6 @@ if found == False:
     print ('Series: ' +
            sys.argv[1] + ' not found!  Please use addVirtual.py with one of the following series:\n')
     for item in jsonResponse:
-        if item['network'] in configData['networkMaps']:
-            network = configData['networkMaps'][item['network']]
-        else:
-            network = item['network']
-
+        network = getNetwork(item, configData)
         if network in configData['networks']:
             print (item['title'] + " [" + network + "]")

@@ -6,9 +6,10 @@ from os import path
 from shutil import copyfile
 from datetime import date
 from datetime import timedelta
+from utils import getNetwork
 
 # Modify below for debug
-daysBack = 0  # Used for debug to get more episodes
+daysBack = 0  # Used for debug to get more episodes (should be 0)
 # Used for debug to get more episodes, one is actually for current day.
 daysAhead = 1
 startDate = date.today() - timedelta(daysBack)
@@ -24,10 +25,7 @@ url = "http://" + configData['host'] + "/api/calendar/?apikey=" + configData['ap
 
 jsonResponse = requests.get(url).json()
 for item in jsonResponse:
-    if item['series']['network'] in configData['networkMaps']:
-        network = configData['networkMaps'][item['series']['network']]
-    else:
-        network = item['series']['network']
+    network = getNetwork(item['series'], configData)
 
     if network in configData['networks']:
         showSeason = "{:02d}".format(item['seasonNumber'])

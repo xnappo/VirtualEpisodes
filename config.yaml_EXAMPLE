@@ -7,6 +7,8 @@ networks: # List of networks available for streaming
   - Amazon
   - HBO
   - Discovery
+showMaps: # Map of show to where available to stream (substring of name)
+  peaky: Netflix  
 networkMaps: # Map of original broadcaster to where available to stream
   BBC One: HBO
   HBO Max: HBO
