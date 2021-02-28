@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon  id="script.virtualepisodes" name="VirtualEpisodes" version="0.1.0" provider-name="xnappo">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0"/>
+  </requires>
+  <extension library="service.py" point="xbmc.service" start="login"/>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <language>en</language>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+    <website>https://github.com/xnappo/VirtualEpisodes</website>
+    <source>https://github.com/xnappo/VirtualEpisodes</source>
+    <summary lang="en">Launch streaming provider player for virtual episodes</summary>
+    <description lang="en">Launch streaming provider player for virtual episodes</description>
+  </extension>
+</addon>
