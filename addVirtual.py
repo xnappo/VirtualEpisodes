@@ -24,6 +24,7 @@ for item in jsonResponse:
     if sys.argv[1].lower() in item['title'].lower():
         found = True
         network = getNetwork(item, configData)
+        print(network)
         if network in configData['networks']:
             if not path.exists(configData['basePath'] + "/" + item['title']):
                 os.mkdir(configData['basePath'] + "/" + item['title'])
@@ -43,6 +44,9 @@ if found == False:
     print ('Series: ' +
            sys.argv[1] + ' not found!  Please use addVirtual.py with one of the following series:\n')
     for item in jsonResponse:
-        network = getNetwork(item, configData)
+        try:
+            network = getNetwork(item, configData)
+        except:
+            network = "unknown"
         if network in configData['networks']:
             print (item['title'] + " [" + network + "]")
