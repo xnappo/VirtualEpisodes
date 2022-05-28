@@ -1,9 +1,12 @@
 def getNetwork(item, configData):
     # Check for network maps (eg: map all BBCONE shows to HBOMAX)
-    if item['network'] in configData['networkMaps']:
-        network = configData['networkMaps'][item['network']]
+    if 'network' in item:
+        if item['network'] in configData['networkMaps']:
+            network = configData['networkMaps'][item['network']]
+        else:
+            network = item['network']
     else:
-        network = item['network']
+        network = ""
 
     # Check for show maps (eg: map Peaky Blinders to Netflix)
     for show in configData['showMaps']:
