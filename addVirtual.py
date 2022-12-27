@@ -6,6 +6,8 @@ import os.path
 from utils import getNetwork
 from os import path
 from shutil import copyfile
+import datetime
+from datetime import date
 
 with open("config.yaml") as config:
     configData = yaml.load(config, Loader=yaml.FullLoader)
@@ -33,13 +35,22 @@ for item in jsonResponse:
                 if not path.exists(configData['basePath'] + "/" + item['title'] + "/Season " + showSeason):
                     os.mkdir(configData['basePath'] + "/" +
                              item['title'] + "/Season " + showSeason)
-                for episode in range(1, item['seasons'][season-1]['statistics']['totalEpisodeCount']+1):
-                    showEpisode = "{:02d}".format(episode)
-                    print ("Adding: " + item['title'] + " " + "S" +
-                           showSeason + "E" + showEpisode + " from " + network)
-                    if not path.exists(configData['basePath'] + "/" + item['title'] + "/Season " + showSeason + "/" + network + "_S" + showSeason + "E" + showEpisode + ".mp4"):
-                        copyfile(configData['dummyFile'], configData['basePath'] + "/" + item['title'] +
-                                 "/Season " + showSeason + "/" + network + "_S" + showSeason + "E" + showEpisode + ".mp4")
+                url = "http://" + configData['host'] + "/api/v3/episode/?seriesId=" + str(item['id']) + "&seasonNumber=" + str(season) + "&apikey=" + configData['apiKey']
+                jsonResponse = requests.get(url).json()
+                for episode in jsonResponse:
+                    showEpisode = "{:02d}".format(episode['episodeNumber'])
+                    airDate = datetime.datetime.strptime(episode['airDate'], "%Y-%m-%d")
+                    today = datetime.datetime.strptime(str(date.today()), "%Y-%m-%d")
+                    if airDate < today:
+                        print ("Adding: " + item['title'] + " " + "S" +
+                               showSeason + "E" + showEpisode + " from " + network)
+                        if not path.exists(configData['basePath'] + "/" + item['title'] + "/Season " + showSeason + "/" + network + "_S" + showSeason + "E" + showEpisode + ".mp4"):
+                            copyfile(configData['dummyFile'], configData['basePath'] + "/" + item['title'] +
+                            "/Season " + showSeason + "/" + network + "_S" + showSeason + "E" + showEpisode + ".mp4")
+                    else:
+                        print ("Not Aired: " + item['title'] + " " + "S" +
+                               showSeason + "E" + showEpisode + " from " + network)
+
 if found == False:
     print ('Series: ' +
            sys.argv[1] + ' not found!  Please use addVirtual.py with one of the following series:\n')
