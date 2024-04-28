@@ -13,7 +13,7 @@ with open("config.yaml") as config:
     configData = yaml.load(config, Loader=yaml.FullLoader)
 
 url = "http://" + configData['host'] + \
-    "/api/series/?apikey=" + configData['apiKey']
+    "/api/v3/series/?apikey=" + configData['apiKey']
 try:
     sys.argv[1]
 except:
@@ -30,7 +30,7 @@ for item in jsonResponse:
         if network in configData['networks']:
             if not path.exists(configData['basePath'] + "/" + item['title']):
                 os.mkdir(configData['basePath'] + "/" + item['title'])
-            for season in range(1, item['seasonCount']+1):
+            for season in range(1, item['statistics']['seasonCount']+1):
                 showSeason = "{:02d}".format(season)
                 if not path.exists(configData['basePath'] + "/" + item['title'] + "/Season " + showSeason):
                     os.mkdir(configData['basePath'] + "/" +
