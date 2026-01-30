@@ -28,13 +28,14 @@ for item in jsonResponse:
         network = getNetwork(item, configData)
         print(network)
         if network in configData['networks']:
-            if not path.exists(configData['basePath'] + "/" + item['title']):
-                os.mkdir(configData['basePath'] + "/" + item['title'])
+            showTitle = (item['title']).replace(':','-')
+            if not path.exists(configData['basePath'] + "/" + showTitle):
+                os.mkdir(configData['basePath'] + "/" + showTitle)
             for season in range(1, item['statistics']['seasonCount']+1):
                 showSeason = "{:02d}".format(season)
-                if not path.exists(configData['basePath'] + "/" + item['title'] + "/Season " + showSeason):
+                if not path.exists(configData['basePath'] + "/" + showTitle + "/Season " + showSeason):
                     os.mkdir(configData['basePath'] + "/" +
-                             item['title'] + "/Season " + showSeason)
+                             showTitle + "/Season " + showSeason)
                 url = "http://" + configData['host'] + "/api/v3/episode/?seriesId=" + str(item['id']) + "&seasonNumber=" + str(season) + "&apikey=" + configData['apiKey']
                 jsonResponse = requests.get(url).json()
                 for episode in jsonResponse:
@@ -42,13 +43,13 @@ for item in jsonResponse:
                     airDate = datetime.datetime.strptime(episode['airDate'], "%Y-%m-%d")
                     today = datetime.datetime.strptime(str(date.today()), "%Y-%m-%d")
                     if airDate < today:
-                        print ("Adding: " + item['title'] + " " + "S" +
+                        print ("Adding: " + showTitle + " " + "S" +
                                showSeason + "E" + showEpisode + " from " + network)
-                        if not path.exists(configData['basePath'] + "/" + item['title'] + "/Season " + showSeason + "/" + network + "_S" + showSeason + "E" + showEpisode + ".mp4"):
-                            copyfile(configData['dummyFile'], configData['basePath'] + "/" + item['title'] +
+                        if not path.exists(configData['basePath'] + "/" + showTitle + "/Season " + showSeason + "/" + network + "_S" + showSeason + "E" + showEpisode + ".mp4"):
+                            copyfile(configData['dummyFile'], configData['basePath'] + "/" + showTitle +
                             "/Season " + showSeason + "/" + network + "_S" + showSeason + "E" + showEpisode + ".mp4")
                     else:
-                        print ("Not Aired: " + item['title'] + " " + "S" +
+                        print ("Not Aired: " + showTitle + " " + "S" +
                                showSeason + "E" + showEpisode + " from " + network)
 
 if found == False:

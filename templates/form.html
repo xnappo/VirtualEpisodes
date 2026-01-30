@@ -1,0 +1,51 @@
+<!-- form.html -->
+<title>Add a Show and a Movie</title>
+<style>
+  body {
+      font-family: Consolas, monospace;
+      font-size: 40px;
+  }
+  label {
+      font-family: Consolas, monospace;
+      font-size: 40px;
+  }
+  input[type="text"],
+  select {
+      font-family: Consolas, monospace;
+      font-size: 40px;
+      padding: 5px;
+      margin-bottom: 10px;
+  }
+  input[type="submit"] {
+      font-family: Consolas, monospace;
+      font-size: 40px;
+      padding: 10px 20px;
+  }
+</style>
+</head>
+<body>
+
+<h2>Add a Show</h2>
+<form action="/run_script" method="post">
+  <label for="show_name">Show Name:</label>
+  <input type="text" style="font-size:40px" id="show_name" name="input_data"><br>
+  <input type="submit" style="font-size:40px" value="Add">
+</form>
+<br>
+<h2>Add a Movie</h2>
+<form action="/run_movie_script" method="post">
+  <label for="movie_name">Movie Name:</label>
+  <input type="text" style="font-size:40px" id="movie_name" name="movie_data">
+  <br>
+  <label for="movie_source">Movie Source:</label>
+  <select name="movie_source" style="font-size:40px">
+    {% for network in networks %}
+      <option value="{{ network }}">{{ network }}</option>
+    {% endfor %}
+  </select><br>
+  <br>
+  <input type="submit" style="font-size:40px" value="Add">
+</form>
+
+</body>
+</html>
