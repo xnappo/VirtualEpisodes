@@ -1,0 +1,12 @@
+<form action="/run_script" method="post">
+    <input type="text" name="input_data">
+    <input type="submit" value="Run Script">
+  </form>
+  
+  <script>
+    function runScript() {
+      fetch('/hello', {method: 'POST'})
+        .then(response => response.text())
+        .then(text => console.log(text));
+    }
+  </script>
