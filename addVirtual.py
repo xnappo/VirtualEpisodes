@@ -63,7 +63,7 @@ for item in jsonResponse:
 
 if found == False:
     if is_web_mode():
-        print('Series not found. Series available in Sonaar are below:')
+        print('Series not found. Series available in Sonarr are below:')
     else:
         print('Series: ' +
               sys.argv[1] + ' not found!  Please use addVirtual.py with one of the following series:\n')
