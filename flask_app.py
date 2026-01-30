@@ -2,36 +2,118 @@
 
 from flask import Flask, request, render_template
 import subprocess
-import addVirtual
+import sys
 import yaml
 
 app = Flask(__name__)
 
-# Load YAML configuration
-with open("config.yaml", "r") as config_file:
-    config = yaml.safe_load(config_file)
-    networks = config.get("networks", [])
+
+def load_config():
+  with open("config.yaml", "r") as config_file:
+    config = yaml.safe_load(config_file) or {}
+  networks = config.get("networks", [])
+  return config, networks
+
+
+def save_config(config):
+  with open("config.yaml", "w") as config_file:
+    yaml.safe_dump(config, config_file, sort_keys=False)
+
+
+def run_add_virtual(show_name):
+  result = subprocess.run(
+    [sys.executable, "addVirtual.py", show_name],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True,
+  )
+  raw_output = result.stdout or ""
+  unmapped_network = None
+  cleaned_lines = []
+  for line in raw_output.splitlines():
+    if line.startswith("UNMAPPED_NETWORK:"):
+      unmapped_network = line.split(":", 1)[1].strip()
+      continue
+    cleaned_lines.append(line)
+  output = "\n".join(cleaned_lines)
+  return output, unmapped_network
+
+
+def run_add_movie(movie_name, movie_source):
+  result = subprocess.run(
+    [sys.executable, "addMovieVirtual.py", movie_name, movie_source],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True,
+  )
+  return result.stdout or ""
 
 @app.route('/')
 def form():
-    return render_template('form.html', networks=networks)
+  _, networks = load_config()
+  return render_template('form.html', networks=networks, output=None, needs_mapping=False)
 
 @app.route('/run_script', methods=['POST'])
 def run_script():
-  input_data = request.form['input_data']
-  result = subprocess.run(['python3','addVirtual.py',input_data],stdout=subprocess.PIPE)
-  output = result.stdout.decode('latin-1').split('\n')
-  output = '<br>'.join(output)
-  return output
+  input_data = request.form['input_data'].strip()
+  output, unmapped_network = run_add_virtual(input_data)
+  _, networks = load_config()
+  if unmapped_network:
+    message = f'Network "{unmapped_network}" is not mapped.'
+    return render_template(
+      'form.html',
+      networks=networks,
+      output=output,
+      needs_mapping=True,
+      unmapped_network=unmapped_network,
+      show_name=input_data,
+      message=message,
+    )
+  return render_template('form.html', networks=networks, output=output, needs_mapping=False)
+
+
+@app.route('/map_network', methods=['POST'])
+def map_network():
+  show_name = request.form['show_name'].strip()
+  unmapped_network = request.form['unmapped_network'].strip()
+  mapped_network = request.form['mapped_network'].strip()
+
+  config, networks = load_config()
+  if not config.get('networkMaps'):
+    config['networkMaps'] = {}
+  config['networkMaps'][unmapped_network] = mapped_network
+  save_config(config)
+
+  output, new_unmapped = run_add_virtual(show_name)
+  message = f'Mapped "{unmapped_network}" to "{mapped_network}" and re-ran.'
+  needs_mapping = False
+  if new_unmapped:
+    needs_mapping = True
+    message = f'Network "{new_unmapped}" is not mapped.'
+
+  return render_template(
+    'form.html',
+    networks=networks,
+    output=output,
+    needs_mapping=needs_mapping,
+    unmapped_network=new_unmapped or unmapped_network,
+    show_name=show_name,
+    message=message,
+  )
 
 @app.route('/run_movie_script', methods=['POST'])
 def run_movie_script():
-  movie_data = request.form['movie_data']
+  movie_data = request.form['movie_data'].strip()
   movie_source = request.form['movie_source']
-  result = subprocess.run(['python3','addMovieVirtual.py',movie_data, movie_source],stdout=subprocess.PIPE)
-  output = result.stdout.decode('latin-1').split('\n')
-  output = '<br>'.join(output)
-  return output
+  output = run_add_movie(movie_data, movie_source)
+  _, networks = load_config()
+  return render_template(
+    'form.html',
+    networks=networks,
+    output=output,
+    needs_mapping=False,
+    message='Movie added.',
+  )
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=8086)
+    app.run(host='0.0.0.0', port=8086)

@@ -1,51 +1,230 @@
-<!-- form.html -->
-<title>Add a Show and a Movie</title>
-<style>
-  body {
-      font-family: Consolas, monospace;
-      font-size: 40px;
-  }
-  label {
-      font-family: Consolas, monospace;
-      font-size: 40px;
-  }
-  input[type="text"],
-  select {
-      font-family: Consolas, monospace;
-      font-size: 40px;
-      padding: 5px;
-      margin-bottom: 10px;
-  }
-  input[type="submit"] {
-      font-family: Consolas, monospace;
-      font-size: 40px;
-      padding: 10px 20px;
-  }
-</style>
-</head>
-<body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AutoVirtual - Add Shows & Movies</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --panel: #111827;
+        --panel-light: #1f2937;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --primary: #3b82f6;
+        --primary-dark: #2563eb;
+        --accent: #22c55e;
+        --warn: #f59e0b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at top, #1e293b 0%, #0f172a 45%, #020617 100%);
+        color: var(--text);
+      }
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 20px 48px;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        letter-spacing: 0.5px;
+      }
+      .header p {
+        margin: 6px 0 0;
+        color: var(--muted);
+      }
+      .grid {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .card {
+        background: linear-gradient(180deg, var(--panel) 0%, var(--panel-light) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      }
+      .card h2 {
+        margin-top: 0;
+        font-size: 20px;
+      }
+      label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 6px;
+        color: var(--muted);
+      }
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 12px 14px;
+        font-size: 16px;
+        color: var(--text);
+        background: #0b1220;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        margin-bottom: 14px;
+      }
+      input[type="text"]::placeholder {
+        color: #64748b;
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .btn {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.1s ease, background 0.2s ease;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+      }
+      .btn-accent {
+        background: var(--accent);
+        color: #0b1120;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .notice {
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        color: #fbbf24;
+        margin-bottom: 16px;
+      }
+      .message {
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        color: #bfdbfe;
+        margin-bottom: 16px;
+      }
+      .output {
+        background: #0b1120;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 14px;
+        white-space: pre-wrap;
+        font-family: Consolas, monospace;
+        color: #e2e8f0;
+        max-height: 380px;
+        overflow-y: auto;
+      }
+      footer {
+        margin-top: 28px;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div>
+          <h1>AutoVirtual</h1>
+          <p>Add a show or movie stub to your library.</p>
+        </div>
+      </div>
 
-<h2>Add a Show</h2>
-<form action="/run_script" method="post">
-  <label for="show_name">Show Name:</label>
-  <input type="text" style="font-size:40px" id="show_name" name="input_data"><br>
-  <input type="submit" style="font-size:40px" value="Add">
-</form>
-<br>
-<h2>Add a Movie</h2>
-<form action="/run_movie_script" method="post">
-  <label for="movie_name">Movie Name:</label>
-  <input type="text" style="font-size:40px" id="movie_name" name="movie_data">
-  <br>
-  <label for="movie_source">Movie Source:</label>
-  <select name="movie_source" style="font-size:40px">
-    {% for network in networks %}
-      <option value="{{ network }}">{{ network }}</option>
-    {% endfor %}
-  </select><br>
-  <br>
-  <input type="submit" style="font-size:40px" value="Add">
-</form>
+      {% if message %}
+        <div class="message">{{ message }}</div>
+      {% endif %}
 
-</body>
+      {% if needs_mapping %}
+        <div class="notice">
+          The network "{{ unmapped_network }}" is not mapped. Choose a streaming network to map it to, then re-run.
+        </div>
+      {% endif %}
+
+      <div class="grid">
+        <div class="card">
+          <h2>Add a Show</h2>
+          <form action="/run_script" method="post">
+            <label for="show_name">Show Name</label>
+            <input type="text" id="show_name" name="input_data" placeholder="e.g., Peaky Blinders" value="{{ show_name or '' }}" />
+            <div class="actions">
+              <button class="btn btn-primary" type="submit">Add Show</button>
+            </div>
+          </form>
+
+          {% if needs_mapping %}
+            <hr style="border-color: rgba(255,255,255,0.08); margin: 18px 0;" />
+            <form action="/map_network" method="post">
+              <input type="hidden" name="show_name" value="{{ show_name }}" />
+              <input type="hidden" name="unmapped_network" value="{{ unmapped_network }}" />
+              <label for="mapped_network">Map "{{ unmapped_network }}" to</label>
+              <select id="mapped_network" name="mapped_network">
+                {% for network in networks %}
+                  <option value="{{ network }}">{{ network }}</option>
+                {% endfor %}
+              </select>
+              <div class="actions">
+                <button class="btn btn-accent" type="submit">Map & Re-run</button>
+                <a class="btn btn-ghost" href="/">Cancel</a>
+              </div>
+            </form>
+          {% endif %}
+        </div>
+
+        <div class="card">
+          <h2>Add a Movie</h2>
+          <form action="/run_movie_script" method="post">
+            <label for="movie_name">Movie Name</label>
+            <input type="text" id="movie_name" name="movie_data" placeholder="e.g., Blade Runner" />
+            <label for="movie_source">Movie Source</label>
+            <select id="movie_source" name="movie_source">
+              {% for network in networks %}
+                <option value="{{ network }}">{{ network }}</option>
+              {% endfor %}
+            </select>
+            <div class="actions">
+              <button class="btn btn-primary" type="submit">Add Movie</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {% if output %}
+        <div style="margin-top: 24px;" class="card">
+          <h2>Output</h2>
+          <div class="output">{{ output }}</div>
+        </div>
+      {% endif %}
+
+      <footer>
+        AutoVirtual Web UI · {{ (message or '') and 'Updated' or '' }}
+      </footer>
+    </div>
+  </body>
 </html>

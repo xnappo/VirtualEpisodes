@@ -27,6 +27,9 @@ for item in jsonResponse:
         found = True
         network = getNetwork(item, configData)
         print(network)
+        if network not in configData['networks']:
+            print("UNMAPPED_NETWORK:" + network)
+            continue
         if network in configData['networks']:
             showTitle = (item['title']).replace(':','-')
             if not path.exists(configData['basePath'] + "/" + showTitle):
