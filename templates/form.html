@@ -140,6 +140,50 @@
         max-height: 380px;
         overflow-y: auto;
       }
+      .suggestions {
+        margin-top: 16px;
+        display: grid;
+        gap: 10px;
+      }
+      .suggestions-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .suggestions-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .btn-small {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+      .suggestion-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+      }
+      .suggestion-title {
+        font-weight: 600;
+        color: #e2e8f0;
+      }
+      .badge {
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(34, 197, 94, 0.15);
+        color: #86efac;
+        font-size: 12px;
+        font-weight: 600;
+      }
       footer {
         margin-top: 28px;
         color: var(--muted);
@@ -222,9 +266,70 @@
         </div>
       {% endif %}
 
+      {% if not_found_message %}
+        <div style="margin-top: 24px;" class="card">
+          <h2>Series Not Found</h2>
+          <p style="color: var(--muted); margin-top: 6px;">{{ not_found_message }}</p>
+          {% if suggestions and suggestions|length > 0 %}
+            <div class="suggestions-header">
+              <div style="color: var(--muted); font-size: 13px;">Showing most recent additions first.</div>
+              <div class="suggestions-actions">
+                <button class="btn btn-ghost btn-small" type="button" data-sort="last">Last added</button>
+                <button class="btn btn-ghost btn-small" type="button" data-sort="asc">A → Z</button>
+                <button class="btn btn-ghost btn-small" type="button" data-sort="desc">Z → A</button>
+              </div>
+            </div>
+            <div class="suggestions">
+              {% for item in suggestions %}
+                <div class="suggestion-item" data-title="{{ item.title|lower }}" data-index="{{ loop.index0 }}">
+                  <div class="suggestion-title">{{ item.title }}</div>
+                  <div class="badge">{{ item.network }}</div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="output">No matching series were returned.</div>
+          {% endif %}
+        </div>
+      {% endif %}
+
       <footer>
         AutoVirtual Web UI · {{ (message or '') and 'Updated' or '' }}
       </footer>
     </div>
+    <script>
+      (function () {
+        const container = document.querySelector('.suggestions');
+        if (!container) return;
+        const items = Array.from(container.querySelectorAll('.suggestion-item'));
+        const original = items.slice();
+
+        function render(list) {
+          container.innerHTML = '';
+          list.forEach((item) => container.appendChild(item));
+        }
+
+        function sortItems(direction) {
+          if (direction === 'last') {
+            render(original);
+            return;
+          }
+          const sorted = items.slice().sort((a, b) => {
+            const aTitle = a.dataset.title || '';
+            const bTitle = b.dataset.title || '';
+            return direction === 'asc'
+              ? aTitle.localeCompare(bTitle)
+              : bTitle.localeCompare(aTitle);
+          });
+          render(sorted);
+        }
+
+        document.querySelectorAll('[data-sort]').forEach((button) => {
+          button.addEventListener('click', () => {
+            sortItems(button.getAttribute('data-sort'));
+          });
+        });
+      })();
+    </script>
   </body>
 </html>

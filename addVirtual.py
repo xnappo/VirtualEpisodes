@@ -2,6 +2,7 @@ import requests
 import json
 import sys
 import yaml
+import os
 import os.path
 from utils import getNetwork
 from os import path
@@ -14,10 +15,15 @@ with open("config.yaml") as config:
 
 url = "http://" + configData['host'] + \
     "/api/v3/series/?apikey=" + configData['apiKey']
+def is_web_mode():
+    return os.getenv("AUTOVIRTUAL_WEB") == "1"
+
+
 try:
     sys.argv[1]
 except:
-    print ('Usage: addVirtual.py <partial title of show to add>')
+    if not is_web_mode():
+        print('Usage: addVirtual.py <partial title of show to add>')
     sys.exit()
 
 jsonResponse = requests.get(url).json()
@@ -56,8 +62,11 @@ for item in jsonResponse:
                                showSeason + "E" + showEpisode + " from " + network)
 
 if found == False:
-    print ('Series: ' +
-           sys.argv[1] + ' not found!  Please use addVirtual.py with one of the following series:\n')
+    if is_web_mode():
+        print('Series not found. Series available in Sonaar are below:')
+    else:
+        print('Series: ' +
+              sys.argv[1] + ' not found!  Please use addVirtual.py with one of the following series:\n')
     for item in jsonResponse:
         try:
             network = getNetwork(item, configData)
