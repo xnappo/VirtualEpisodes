@@ -1,4 +1,5 @@
 # script.virtualepisodes
+![AutoVirtual Web UI](images/webui.png)
 Set of utilities to provide dummy episodes for streaming provider content.
 
 Problem:
