@@ -24,3 +24,15 @@ Usage:
 - Run addVirtual.py with substring of show to add as argument to add already aired episodes
 - Set up service.py as Kodi addon - if people get interested in my hair-brained scheme I can host it on a repo
 Kodi service to launch streaming app for virtual episodes
+
+Web interface:
+- Provides a simple UI to add show stubs and movie stubs without the CLI
+- Runs [addVirtual.py](addVirtual.py) and [addMovieVirtual.py](addMovieVirtual.py) on demand and streams their output
+- Lets you map unmapped networks into [config.yaml](config.yaml) and re-run immediately
+- Shows recent Sonarr suggestions when a series name is not found
+
+Run the web interface:
+- Copy [config.yaml_EXAMPLE](config.yaml_EXAMPLE) to [config.yaml](config.yaml) and ensure the networks list is populated
+- Install dependencies: Flask and PyYAML
+- Start the server with python flask_app.py (or run [flask_app.py](flask_app.py) in your environment)
+- Open http://localhost:8086 in a browser (or http://<host>:8086 if hosting on another machine)
