@@ -207,7 +207,7 @@
 
       {% if needs_mapping %}
         <div class="notice">
-          The network "{{ unmapped_network }}" is not mapped. Choose a streaming network to map it to, then re-run.
+          The network "{{ unmapped_network }}" is not mapped. Choose a mapping method below, then re-run.
         </div>
       {% endif %}
 
@@ -224,6 +224,7 @@
 
           {% if needs_mapping %}
             <hr style="border-color: rgba(255,255,255,0.08); margin: 18px 0;" />
+            <h2>Network Map</h2>
             <form action="/map_network" method="post">
               <input type="hidden" name="show_name" value="{{ show_name }}" />
               <input type="hidden" name="unmapped_network" value="{{ unmapped_network }}" />
@@ -235,6 +236,24 @@
               </select>
               <div class="actions">
                 <button class="btn btn-accent" type="submit">Map & Re-run</button>
+                <a class="btn btn-ghost" href="/">Cancel</a>
+              </div>
+            </form>
+
+            <hr style="border-color: rgba(255,255,255,0.08); margin: 18px 0;" />
+            <h2>Show Map</h2>
+            <form action="/map_show" method="post">
+              <input type="hidden" name="show_name" value="{{ show_name }}" />
+              <label for="show_map_key">Map show name contains</label>
+              <input type="text" id="show_map_key" name="show_map_key" placeholder="e.g., peaky" value="{{ show_map_key or show_name or '' }}" />
+              <label for="show_mapped_network">Map show to</label>
+              <select id="show_mapped_network" name="mapped_network">
+                {% for network in networks %}
+                  <option value="{{ network }}">{{ network }}</option>
+                {% endfor %}
+              </select>
+              <div class="actions">
+                <button class="btn btn-accent" type="submit">Map Show & Re-run</button>
                 <a class="btn btn-ghost" href="/">Cancel</a>
               </div>
             </form>

@@ -49,8 +49,21 @@ for item in jsonResponse:
                 jsonResponse = requests.get(url).json()
                 for episode in jsonResponse:
                     showEpisode = "{:02d}".format(episode['episodeNumber'])
-                    airDate = datetime.datetime.strptime(episode['airDate'], "%Y-%m-%d")
-                    today = datetime.datetime.strptime(str(date.today()), "%Y-%m-%d")
+                    air_date_raw = episode.get('airDate') or episode.get('airDateUtc')
+                    if not air_date_raw:
+                        print ("Skipping: " + showTitle + " " + "S" +
+                               showSeason + "E" + showEpisode + " from " + network + " (missing air date)")
+                        continue
+                    try:
+                        if "T" in air_date_raw:
+                            airDate = datetime.datetime.fromisoformat(air_date_raw.replace("Z", "+00:00")).date()
+                        else:
+                            airDate = datetime.datetime.strptime(air_date_raw, "%Y-%m-%d").date()
+                    except ValueError:
+                        print ("Skipping: " + showTitle + " " + "S" +
+                               showSeason + "E" + showEpisode + " from " + network + " (invalid air date)")
+                        continue
+                    today = date.today()
                     if airDate < today:
                         print ("Adding: " + showTitle + " " + "S" +
                                showSeason + "E" + showEpisode + " from " + network)

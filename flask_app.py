@@ -102,6 +102,7 @@ def run_script():
       needs_mapping=True,
       unmapped_network=unmapped_network,
       show_name=input_data,
+      show_map_key=input_data,
       message=message,
       not_found_message=not_found_message,
       suggestions=suggestions,
@@ -143,6 +144,39 @@ def map_network():
     needs_mapping=needs_mapping,
     unmapped_network=new_unmapped or unmapped_network,
     show_name=show_name,
+    show_map_key=show_name,
+    message=message,
+    not_found_message=not_found_message,
+    suggestions=suggestions,
+  )
+
+@app.route('/map_show', methods=['POST'])
+def map_show():
+  show_name = request.form['show_name'].strip()
+  show_map_key = request.form['show_map_key'].strip() or show_name
+  mapped_network = request.form['mapped_network'].strip()
+
+  config, networks = load_config()
+  if not config.get('showMaps'):
+    config['showMaps'] = {}
+  config['showMaps'][show_map_key] = mapped_network
+  save_config(config)
+
+  output, new_unmapped, not_found_message, suggestions = run_add_virtual(show_name)
+  message = f'Show "{show_map_key}" mapped to "{mapped_network}" and re-ran.'
+  needs_mapping = False
+  if new_unmapped:
+    needs_mapping = True
+    message = f'Network "{new_unmapped}" is not mapped.'
+
+  return render_template(
+    'form.html',
+    networks=networks,
+    output=output,
+    needs_mapping=needs_mapping,
+    unmapped_network=new_unmapped,
+    show_name=show_name,
+    show_map_key=show_map_key,
     message=message,
     not_found_message=not_found_message,
     suggestions=suggestions,
