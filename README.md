@@ -18,7 +18,7 @@ Solution:
 
 Limitations:
 
-- Kodi service only set up to work with Android right now (test on Firecube3, Homatics BoxR 4K+ and NVidia Shield)
+- Kodi service only set up to work with Android right now (tested on Firecube3, Homatics BoxR 4K+ and NVidia Shield)
 - Must use direct paths in Kodi so that the service can see the filename
 - Does not launch episode directly, still have to navigate in native app again
 
@@ -28,7 +28,7 @@ Usage:
 - Install dependencies: Flask and PyYAML
 - Start the server with python flask_app.py (or run [flask_app.py](flask_app.py) in your environment)
 - Open http://localhost:8086 in a browser (or http://<host>:8086 if hosting on another machine)
-- Set up service.py which launching the streaming apps as Kodi addon - may need to modify app names for your box
+- Set up service.py which launches the streaming apps as Kodi addon - may need to modify app names for your box
 
 Version history:
 - 2026-05-21: Added web scheduling for AutoVirtual with a Run Now option, plus show-map and network-map tools in the UI.
