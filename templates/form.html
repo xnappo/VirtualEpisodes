@@ -184,6 +184,18 @@
         font-size: 12px;
         font-weight: 600;
       }
+      .helper {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: -6px;
+        margin-bottom: 12px;
+      }
+      .last-run {
+        margin-top: 24px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+      }
       footer {
         margin-top: 28px;
         color: var(--muted);
@@ -203,6 +215,10 @@
 
       {% if message %}
         <div class="message">{{ message }}</div>
+      {% endif %}
+
+      {% if schedule_message %}
+        <div class="message">{{ schedule_message }}</div>
       {% endif %}
 
       {% if needs_mapping %}
@@ -276,12 +292,44 @@
             </div>
           </form>
         </div>
+
+        <div class="card">
+          <h2>AutoVirtual Schedule</h2>
+          <form action="/schedule_update" method="post">
+            <label for="schedule_times">Run times (24h)</label>
+            <input
+              type="text"
+              id="schedule_times"
+              name="schedule_times"
+              placeholder="e.g., 06:30, 18:45"
+              value="{{ schedule_times or '' }}"
+            />
+            <div class="helper">Comma-separated times in HH:MM. Leave blank to disable.</div>
+            <div class="actions">
+              <button class="btn btn-primary" type="submit">Save Schedule</button>
+              <button class="btn btn-ghost" type="submit" name="schedule_times" value="">Disable</button>
+            </div>
+          </form>
+          <hr style="border-color: rgba(255,255,255,0.08); margin: 18px 0;" />
+          <form action="/run_auto_virtual" method="post">
+            <div class="actions">
+              <button class="btn btn-accent" type="submit">Run AutoVirtual Now</button>
+            </div>
+          </form>
+        </div>
       </div>
 
       {% if output %}
         <div style="margin-top: 24px;" class="card">
           <h2>Output</h2>
           <div class="output">{{ output }}</div>
+        </div>
+      {% endif %}
+
+      {% if auto_output %}
+        <div style="margin-top: 24px;" class="card">
+          <h2>AutoVirtual Output</h2>
+          <div class="output">{{ auto_output }}</div>
         </div>
       {% endif %}
 
@@ -311,6 +359,10 @@
           {% endif %}
         </div>
       {% endif %}
+
+      <div class="last-run">
+        Last AutoVirtual run: {{ last_auto_run }}
+      </div>
 
       <footer>
         AutoVirtual Web UI · {{ (message or '') and 'Updated' or '' }}
