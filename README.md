@@ -4,41 +4,31 @@ Set of utilities to provide dummy episodes for streaming provider content.
 
 Problem:
 
-Want to be able to track streaming provider TV episodes within Kodi, but just watch them in the native app rather than constantly chasing Kodi Netflix/Prime strm compatibility.
+Want to be able to track streaming provider TV episodes within Kodi, but just watch them in the native app rather than constantly chasing Kodi Netflix/Prime .strm compatibility.
 
 Solution:
 
-- Python script autoVirtual monitors Sonarr calendar for new Netflix and Amazon episode availability and creates placeholder episode files
-- Python script addVirtual uses Sonarr data to create Netflix and Amazon placeholder episode files on demand for already aired episodes
-- Emby scrapes dummy files and adds to database as with any 'real' file
-- Kodi service.py looks for playing file with 'Netflix' or 'Amazon' in the name and lauches native player
+- A Flask web interface acts as the front door for adding Sonarr tracked shows and movie stubs
+- Emby/Jellyfin indexes the dummy files like normal media
+- Kodi service.py detects the streaming provider in the stub filename on playback and launches the native app
+- Runs on a lightweight WebUI configurable schedule (or on demand) to create placeholder episodes from the Sonarr calendar
+- Supports on-demand backfills for already aired episodes with streamed output log
+- Lets you map networks and show-name keywords in Web UI or [config.yaml](config.yaml)
+- Shows Sonarr suggestions when a series name is not found, with sorting options
 
 Limitations:
 
-- Kodi service only set up to work with Android right now (and maybe only NVidia Shield)
+- Kodi service only set up to work with Android right now (test on Firecube3, Homatics BoxR 4K+ and NVidia Shield)
+- Must use direct paths in Kodi so that the service can see the filename
 - Does not launch episode directly, still have to navigate in native app again
 
 Usage:
 - Copy the config.yaml_EXAMPLE file to config.yaml edit as needed
 - Add Netflix/Amazon shows to Sonarr as normal, but set to 'unmonitored'
-- Run addVirtual.py with substring of show to add as argument to add already aired episodes
-- Set up service.py as Kodi addon - if people get interested in my hair-brained scheme I can host it on a repo
-Kodi service to launch streaming app for virtual episodes
-
-Web interface:
-- Provides a simple UI to add show stubs and movie stubs without the CLI
-- Runs [addVirtual.py](addVirtual.py) and [addMovieVirtual.py](addMovieVirtual.py) on demand and streams their output
-- Lets you map unmapped networks into [config.yaml](config.yaml) and re-run immediately
-- Lets you map show-name keywords into [config.yaml](config.yaml) for custom streaming provider mapping
-- Shows recent Sonarr suggestions when a series name is not found
-- Lets you set a lightweight schedule (HH:MM, comma-separated) to run [autoVirtual.py](autoVirtual.py) inside the web app
-- Includes a Run Now button for [autoVirtual.py](autoVirtual.py)
-
-Run the web interface:
-- Copy [config.yaml_EXAMPLE](config.yaml_EXAMPLE) to [config.yaml](config.yaml) and ensure the networks list is populated
 - Install dependencies: Flask and PyYAML
 - Start the server with python flask_app.py (or run [flask_app.py](flask_app.py) in your environment)
 - Open http://localhost:8086 in a browser (or http://<host>:8086 if hosting on another machine)
+- Set up service.py which launching the streaming apps as Kodi addon - may need to modify app names for your box
 
 Version history:
 - 2026-05-21: Added web scheduling for AutoVirtual with a Run Now option, plus show-map and network-map tools in the UI.
